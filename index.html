@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Human vs AI Reasoning Evaluation</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #4a90e2;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #357ab8;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef3ff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Human vs AI Reasoning Evaluation</h1>
+  <p>Compare Human Thinking vs AI Generated Reasoning</p>
+</header>
+
+<div class="container">
+
+  <h3>Enter Question:</h3>
+  <textarea id="question" placeholder="Enter your question..."></textarea>
+
+  <h3>Human Answer:</h3>
+  <textarea id="humanAnswer" placeholder="Write human reasoning..."></textarea>
+
+  <h3>AI Answer (Auto Generated):</h3>
+  <textarea id="aiAnswer" placeholder="AI will generate automatically..." readonly></textarea>
+
+  <button id="evaluateBtn">Evaluate</button>
+
+  <div class="result" id="result"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function generateAIAnswer(question) {
+    return "AI Response: Based on the question, a logical explanation can be derived. " +
+           "The reasoning involves analyzing the situation, identifying key factors, " +
+           "and applying structured logic. Therefore, the answer depends on the given context.";
+  }
+
+  document.getElementById("evaluateBtn").addEventListener("click", function () {
+
+    const question = document.getElementById("question").value.trim();
+    const human = document.getElementById("humanAnswer").value.trim();
+
+    if (!question || !human) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    // ✅ Auto AI Answer
+    const aiGenerated = generateAIAnswer(question);
+    document.getElementById("aiAnswer").value = aiGenerated;
+
+    // ✅ Scoring logic
+    let scoreHuman = 0;
+    let scoreAI = 0;
+
+    // Length score
+    scoreHuman += human.length;
+    scoreAI += aiGenerated.length;
+
+    // Sentence count
+    scoreHuman += human.split(/[.!?]/).length * 10;
+    scoreAI += aiGenerated.split(/[.!?]/).length * 10;
+
+    // Keywords
+    const keywords = ["because", "therefore", "reason", "logic", "explain"];
+
+    keywords.forEach(word => {
+      if (human.toLowerCase().includes(word)) scoreHuman += 20;
+      if (aiGenerated.toLowerCase().includes(word)) scoreAI += 20;
+    });
+
+    // Result
+    let resultText = "";
+
+    if (scoreHuman > scoreAI) {
+      resultText = "🧠 Human reasoning is stronger and more detailed.";
+    } else if (scoreAI > scoreHuman) {
+      resultText = "🤖 AI reasoning appears more structured.";
+    } else {
+      resultText = "⚖️ Both have similar reasoning quality.";
+    }
+
+    document.getElementById("result").innerHTML =
+      "<h3>Evaluation Result:</h3>" +
+      "<p>" + resultText + "</p>" +
+      "<p><strong>Human Score:</strong> " + scoreHuman + "</p>" +
+      "<p><strong>AI Score:</strong> " + scoreAI + "</p>";
+
+  });
+
+});
+</script>
+
+</body>
+</html>
